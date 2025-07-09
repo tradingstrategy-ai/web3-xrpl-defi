@@ -51,8 +51,10 @@ def calculate_quote_price(
     :returns: DataFrame with direction and quoted_price columns,
     """
 
-    assert df["amm_asset_1"].nunique() == 1
-    assert df["amm_asset_2"].nunique() == 1
+    assert len(df) > 0, "DataFrame is empty"
+
+    assert df["amm_asset_1"].nunique() == 1, f"Expected single AMM asset 1, got {df['amm_asset_1'].unique()}"
+    assert df["amm_asset_2"].nunique() == 1, f"Expected single AMM asset 2, got {df['amm_asset_2'].unique()}"
 
     if quote_token == df["amm_asset_1"].unique()[0]:
         df = df.rename(columns={

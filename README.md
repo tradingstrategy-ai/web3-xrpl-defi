@@ -2,14 +2,15 @@
 
 Python integrations for XRP ledger Web3 and DeFi ecosystem.
 
-Features
+Use cases
 
 - Market data analysis
 - Trade automation
 
 ## Preface
 
-This is a proof of concept for managing XRP ledger trade integration in a format that is suitable for professional traders, data researchers and analyst.
+This is a proof of concept for XRP trading data integration. In this PoC, 
+we show how to transform raw XRP Ledger data for something useful.
 
  👉 [See the example notebook on how it works](./examples/crypto-xrp-price.ipynb).
 
@@ -21,6 +22,10 @@ This is a proof of concept for managing XRP ledger trade integration in a format
 - Choose right Python environment for running Jupyter Notebook
 - Run
 
-## More information
+## Related projects
 
 - [XRPL-py](https://github.com/XRPLF/xrpl-py)
+
+## Questions
+
+- [Come to Discord](https://tradingstrategy.ai/community)
