@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 
 
 
-def get_payment_transactions(
+def get_amm_trades(
     client: JsonRpcClient, 
     account: str, 
     limit=200, 
@@ -29,7 +29,9 @@ def get_payment_transactions(
     max_ledger_index=None,
 ) -> Iterable[dict]:
     """
-    Retrieve all Payment type transactions for a given account.
+    Retrieve all trade transactions for AMM.
+
+    - Only considers AMM payment/offer transactions, does not work with decentralised exchange.
 
     :param client:
         The JsonRpcClient instance to use for making requests.
@@ -82,7 +84,8 @@ def get_payment_transactions(
         
         # Filter for Payment transactions
         for tx in transactions:            
-            if tx.get("tx_json", {}).get("TransactionType") == "Payment":
+            if tx.get("tx_json", {}).get("TransactionType") in ("Payment", "OfferCreate"):
+                tx["market"] = account  # Add market field, because it is not reflected back by the node
                 count += 1
                 yield tx
 
@@ -92,7 +95,7 @@ def get_payment_transactions(
                 # We can show progress bar after the first tx
                 start_ledger_index = tx_ledger_index
                 progress_bar = tqdm(
-                    desc="Fetching Payment transactions",
+                    desc="Fetching payment txs",
                     unit="ledger",
                     unit_scale=True,
                     unit_divisor=1_000_000,
@@ -131,7 +134,7 @@ def get_payment_transactions(
 
 def prepare_trades_data(payment_transactions: Iterable[dict]) -> pd.DataFrame:
     """
-    Prepare trades data from payment transactions.
+    Prepare trades data from AMM trades.
 
     - Makes raw XRP data to useseable swap event data
     - Parses out buy/sell, price and other relevant fields
@@ -140,6 +143,10 @@ def prepare_trades_data(payment_transactions: Iterable[dict]) -> pd.DataFrame:
     - Out Currency and Amount: These are typically found in the DeliverMax or delivered_amount field, which specifies the amount and currency the sender expects to receive.
 
     - Exported numbers are float64 and thus useable only for data research and analysis.
+
+    - Example swap (payment) https://xrpscan.com/tx/F007D9DA51F0849A3298B8F73C4E378907FD60406A9888AC90056D8B082E136D
+    - Example swap (payment) https://xrpscan.com/tx/6968AF0509D382CBEF10EE02F627DEBD48C02CB091A1B478D49FB43C663DDFD1
+    - Example swap (offer) https://xrpscan.com/tx/A8D33649BEC347D5D5AE7614A339246430ED44C09FA5E68951CC14C03200D3C9
 
     TODO: Add handling fees, such
     
@@ -157,31 +164,46 @@ def prepare_trades_data(payment_transactions: Iterable[dict]) -> pd.DataFrame:
         ripple_date = tx_json["date"]
         timestamp = ripple_time_to_datetime(ripple_date)
 
-        if type(tx_json["SendMax"]) != dict:
-            # In currency is XRP
-            amount_in = tx_json["SendMax"]
-            currency_in = "XRP"
-            amount_out = tx_json["DeliverMax"]["value"]
-            currency_out = decode_currency_symbol(tx_json["DeliverMax"]["currency"])
-        else:
-            # Out currency is XRP
-            amount_in = tx_json["DeliverMax"]
-            currency_in = "XRP"
-            amount_out = tx_json["SendMax"]["value"]
-            currency_out = decode_currency_symbol(tx_json["SendMax"]["currency"])
-        
+        # 
+        match tx_json["TransactionType"]:
+            case "Payment":
+                # https://xrpscan.com/tx/F007D9DA51F0849A3298B8F73C4E378907FD60406A9888AC90056D8B082E136D
+                # Payment transaction
+                amount_out = tx["DeliveredAmount"]["value"]
+                currency_out = decode_currency_symbol(tx["DeliveredAmount"]["currency"])            
+                amount_in = tx["Amount"]["value"]
+                currency_in = decode_currency_symbol(tx["Amount"]["currency"])            
+            case "OfferCreate":
+                # OfferCreate transaction
+                # https://xrpscan.com/tx/A8D33649BEC347D5D5AE7614A339246430ED44C09FA5E68951CC14C03200D3C9
+                import ipdb ; ipdb.set_trace()
+                amount_in = tx_json["TakerPays"]["value"]
+                currency_in = decode_currency_symbol(tx["TakerPays"]["currency"])
+                amount_out = tx["TakerGets"]["value"]
+                currency_out = decode_currency_symbol(tx["TakerGets"]["currency"])
+            case _:
+                raise NotImplementedError(
+                    f"Unsupported TransactionType: {tx['TransactionType']}"
+                )   
+
         entry = {
             "timestamp": timestamp,        
             "ledger_index": int(tx_json["ledger_index"]),
-            "amount_in": float(amount_in),
-            "amount_out": float(amount_out),
-            "currency_in": currency_in,
-            "currency_out": currency_out,
+            "market": tx["market"],  # AMM account injected
+            "amount_in": amount_in,
+            "amount_out":amount_out,
+            "currency_in": currency_in,  # XRP/RLUSD/CRYPTO str
+            "currency_out": currency_out,  # XRP/RLUSD/CRYPTO str
+            "tx_hash": tx["hash"],  # Transaction hash
+            "from_account": tx_json["Account"],  # Sender account
+            "to_account": tx_json["Destination"],  # Destination account, usually the same as sender as swaps against the AMM            
             # Store the original data as JSON dump
             "raw_tx": json.dumps(tx_json),
         }
         data.append(entry)
-    
+
+    assert len(data) > 0, "No payment transactions found"
+
     df = pd.DataFrame(data)
     df = df.sort_values(by="timestamp", ascending=True)
     return df
@@ -204,12 +226,14 @@ def main():
 
     # AMM account CRYPTO/XRP
     # https://xrpscan.com/account/rLjUKpwUVmz3vCTmFkXungxwzdoyrWRsFG
-    account = "rLjUKpwUVmz3vCTmFkXungxwzdoyrWRsFG"
+    # AMM account RLUSD/XRP
+    # https://xrpscan.com/account/rhWTXC2m2gGGA9WozUaoMm6kLAVPb1tcS3
+    account = "rhWTXC2m2gGGA9WozUaoMm6kLAVPb1tcS3"
     
     logger.info(f"Fetching Payment transactions for account: {account}")
 
     # Fetch Payment transactions
-    payment_transactions = get_payment_transactions(
+    payment_transactions = get_amm_trades(
         client, 
         account,
         max_ledger_index=87_544_747,  # Sample few trades as start

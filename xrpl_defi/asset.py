@@ -10,7 +10,7 @@ def decode_currency_symbol(currency: str) -> str:
     """Decode XRPL currency symbol from its hexadecimal representation.
     
     """
-    return bytes.fromhex(currency).decode('utf-8')
+    return bytes.fromhex(currency).decode('utf-8', errors='ignore').rstrip('\x00')
 
 
 
