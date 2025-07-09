@@ -1,0 +1,32 @@
+[project]
+name = "web3-defi-xrpl"
+version = "0.1.0"
+description = "Web3 and DeFi integrations layer for XRPL"
+authors = [
+    {name = "Trading Strategy",email = "info@tradingstrategy.ai"}
+]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "xrpl-py (>=4.2.0,<5.0.0)",
+    "coloredlogs (>=15.0.1,<16.0.0)",
+    "psutil (>=7.0.0,<8.0.0)",
+    "tqdm-loggable (>=0.2,<0.3)",
+    "pandas (>=2.3.1,<3.0.0)",
+    "pyarrow (>=20.0.0,<21.0.0)",
+    "zstandard (>=0.23.0,<0.24.0)",
+    "plotly (>=6.2.0,<7.0.0)"
+]
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.group.dev.dependencies]
+ipdb = "^0.13.13"
+
+[tool.poetry]
+packages = [
+    { include = "xrpl_defi" },
+]
