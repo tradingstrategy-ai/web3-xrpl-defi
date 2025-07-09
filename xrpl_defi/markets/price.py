@@ -6,7 +6,7 @@ import pandas as pd
 
 
 def _calc_amm_row_price(row) -> float:
-    return row["base_amount"]  / row["quote_amount"]
+    return row["quote_amount"]  / row["base_amount"]
 
 
 def calculate_ohlc(price_series: pd.Series, freq: str) -> pd.DataFrame:
