@@ -169,7 +169,7 @@ def set_large_plotly_chart_font(
     pio.templates.default = "custom"
 
 
-def set_notebook_logging(log_level: int | str=logging.INFO):
+def set_notebook_logging(log_level: int | str=logging.WARNING):
     """Enable logging in notebooks.
 
     - Only needed to diagnose Client library bugs when running in notebook

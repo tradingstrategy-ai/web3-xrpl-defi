@@ -2,10 +2,20 @@
 
 Python integrations for XRP ledger Web3 and DeFi ecosystem.
 
-Use cases
+**This is alpha version of the library**
+
+## Use cases
 
 - Market data analysis
 - Trade automation
+
+## Features 
+
+- Error-tolerant XRP Ledger client
+- Price chart rendering
+- AMM data fetching
+- Jupyter notebook research utilities
+- Helpers to handle XRP DeFi data
 
 ## Preface
 
