@@ -7,7 +7,7 @@ Python integrations for XRP ledger Web3 and DeFi ecosystem.
 ## Preface
 
 This is a proof of concept for XRP trading data integration. In this PoC, 
-we show how to transform raw XRP Ledger data for something useful.
+we show how to transform raw XRP Ledger transaction data to market data useful for automated trading and data research.
 
  👉 [See the example notebook on how it works](./examples/crypto-xrp-price.ipynb).
 
