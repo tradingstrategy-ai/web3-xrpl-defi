@@ -40,7 +40,7 @@ An example price chart from [XRPL AMM rhWTXC2m2gGGA9WozUaoMm6kLAVPb1tcS3](https:
 
 This Python library forms the core of the XRP Ledger automated trading infrastructure, and deploying self-custodial trading strategies on XRP Ledger.
 
-Three primary components are needed for algorithmic 
+These primary components are needed for algorithmic trading
 - **Market data indexer**: Transforms raw XRP Ledger transactions to useable market data that can be consumed by data researches and strategies. This is a custom Python indexer and transformer this project is building.
 - **Strategy code**: the strategy itself. A strategy can be developed and deployment by any quant finance expert. A strategy will be deployed as a combination off onchain (Escrow) and offchain (oracles) combination. [To learn more about different strategies and algorithmic trading, please see the library here](https://tradingstrategy.ai/docs/learn/). The strategy reads market data, and takes different trading decisions like entering and exiting token holding positions, based on the price action. External data feeds, like social sentiment data and US treasury rates, can be used as an input as well.
 - **Trade executor**: Converts logical trade decisions (open/close/increase/decrease position/provide liquidity) to raw XRP ledger transactions. Broadcasts these transctions in a robust manner, monitors the transaction propagation, does post-trade analysis for executed price. 
