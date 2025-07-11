@@ -23,7 +23,7 @@ we show how to transform raw XRP Ledger transaction data to market data useful f
 
 - Open source
 - Jupyter notebook research utilities familiar for all data scientists
-- Direct data feeds from XRP Leddger JSON-RPC, with robustness for network error tolerances
+- Direct data feeds from XRP Ledger JSON-RPC, with robustness for network error tolerances
 - AMM data fetching
 - Price chart rendering
 - Helpers to handle XRP DeFi data conversions
