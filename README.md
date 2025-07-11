@@ -16,6 +16,7 @@ we show how to transform raw XRP Ledger transaction data to market data useful f
 
 - Market data analysis
 - Trade automation
+- Trading strategy development and backtesting
 - Data research and quant finance
 
 ## Features 
@@ -39,7 +40,7 @@ Three primary components are needed for algorithmic
 - **Market data indexer**: Transforms raw XRP Ledger transactions to useable market data that can be consumed by data researches and strategies. This is a custom Python indexer and transformer this project is building.
 - **Strategy code**: the strategy itself. A strategy can be developed and deployment by any quant finance expert. A strategy will be deployed as a combination off onchain (Escrow) and offchain (oracles) combination. [To learn more about different strategies and algorithmic trading, please see the library here](https://tradingstrategy.ai/docs/learn/). The strategy reads market data, and takes different trading decisions like entering and exiting token holding positions, based on the price action. External data feeds, like social sentiment data and US treasury rates, can be used as an input as well.
 - **Trade executor**: Converts logical trade decisions (open/close/increase/decrease position/provide liquidity) to raw XRP ledger transactions. Broadcasts these transctions in a robust manner, monitors the transaction propagation, does post-trade analysis for executed price. 
-- **Escrow and capital management**: Allows self-custodial management of trading capital using XRP ledger Escrow object. This will be likely replaced or enhanchent by new XRP ledger smart contract, hooks and extension features to move more logic onchain from the oracle network.
+- **Escrow and capital management**: Allows self-custodial management of trading capital using XRP ledger Escrow object. In the future, more of this logic can be moved onchain when new XRP Ledger smart contract and hook features become available.
 
 ![architecture](/examples/architecture.png)
 
@@ -47,7 +48,7 @@ Three primary components are needed for algorithmic
 
 - Checkout the repo
 - Install with `poetry install`
-- Open notebook in Visual Studio Code
+- Open an example notebook in Visual Studio Code
 - Choose right Python environment for running Jupyter Notebook
 - Run
 
