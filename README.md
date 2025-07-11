@@ -22,11 +22,15 @@ we show how to transform raw XRP Ledger transaction data to market data useful f
 ## Features 
 
 - Open source
+- Jupyter notebook research utilities familiar for all data scientists
 - Direct data feeds from XRP Leddger JSON-RPC, with robustness for network error tolerances
 - AMM data fetching
 - Price chart rendering
-- Jupyter notebook research utilities
 - Helpers to handle XRP DeFi data conversions
+- Offer tracking (TODO)
+- Real-time data extract-transform-load pipeline (TODO)
+- Complex transaction building (TODO)
+- Escrow management (TODO)
 
 An example price chart from [XRPL AMM rhWTXC2m2gGGA9WozUaoMm6kLAVPb1tcS3](https://xrpscan.com/account/rhWTXC2m2gGGA9WozUaoMm6kLAVPb1tcS3).
 
@@ -57,7 +61,9 @@ Three primary components are needed for algorithmic
 - [Web3-Ethereum-Defi](https://github.com/tradingstrategy-ai/web3-ethereum-defi)
 - [XRPL-py](https://github.com/XRPLF/xrpl-py)
 - [Pandas](https://pandas.pydata.org/)
-- [Python}](https://www.python.org/)
+- [Plotly](https://plotly.com/)
+- [Jupyter](https://jupyter.org/)
+- [Python](https://www.python.org/)
 
 ## Questions
 
