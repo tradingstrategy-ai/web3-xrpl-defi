@@ -38,7 +38,7 @@ An example price chart from [XRPL AMM rhWTXC2m2gGGA9WozUaoMm6kLAVPb1tcS3](https:
 
 ## System architecture
 
-This Python library forms the core of the XRP ledger automated trading infrastructure, and deploying self-custodial trading strategies on XRP Ledger.
+This Python library forms the core of the XRP Ledger automated trading infrastructure, and deploying self-custodial trading strategies on XRP Ledger.
 
 Three primary components are needed for algorithmic 
 - **Market data indexer**: Transforms raw XRP Ledger transactions to useable market data that can be consumed by data researches and strategies. This is a custom Python indexer and transformer this project is building.
